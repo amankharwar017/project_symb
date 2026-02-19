@@ -1,26 +1,21 @@
-import React from "react";
-import AddSlot from "./AddSlot";
-import ParkVehicle from "./ParkVehicle";
-import RemoveVehicle from "./RemoveVehicle";
-import ViewSlots from "./ViewSlots";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import AssignmentUI from "./pages/AssignmentUI";
 
-function App() {
+export default function App() {
   return (
-    <div>
-      <h2>Parking App</h2>
+    <BrowserRouter>
+      <div className="topBar">
+        <h2 className="title">Smart Parking Lot System</h2>
 
-      <AddSlot />
-      <hr />
+        {/* Router DOM used (simple) */}
+        <div className="nav">
+          <Link to="/">Assignment UI</Link>
+        </div>
+      </div>
 
-      <ParkVehicle />
-      <hr />
-
-      <RemoveVehicle />
-      <hr />
-
-      <ViewSlots />
-    </div>
+      <Routes>
+        <Route path="/" element={<AssignmentUI />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;
