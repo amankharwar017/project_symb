@@ -1,0 +1,6 @@
+# Eclipse 
+.metadata/ 
+ 
+# React frontend 
+frontend/parking_frontend/node_modules/ 
+frontend/parking_frontend/build/ 
