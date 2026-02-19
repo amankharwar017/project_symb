@@ -1,6 +1,8 @@
+
 package com.parking.controller;
 
 import com.parking.entity.ParkingSlot;
+import com.parking.exception.SimpleParkingException;
 import com.parking.service.ParkingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/parking")
-@CrossOrigin
+@RequestMapping("/api/slots")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ParkingController {
 
     private final ParkingService service;
@@ -18,37 +20,35 @@ public class ParkingController {
         this.service = service;
     }
 
-    // 1️⃣ Add Slot
-    @PostMapping("/add")
-    public ResponseEntity<ParkingSlot> addSlot(@RequestBody ParkingSlot slot) {
-        return ResponseEntity.ok(service.addSlot(slot));
+    @PostMapping
+    public ResponseEntity<?> addSlot(@RequestBody ParkingSlot slot) {
+        try {
+            return ResponseEntity.ok(service.addSlot(slot));
+        } catch (SimpleParkingException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    // 2️⃣ View All Slots
-    @GetMapping("/all")
-    public ResponseEntity<List<ParkingSlot>> getAllSlots() {
+    @GetMapping
+    public ResponseEntity<List<ParkingSlot>> getAll() {
         return ResponseEntity.ok(service.getAllSlots());
     }
 
-    // 3️⃣ Park Vehicle
     @PostMapping("/park")
-    public ResponseEntity<?> parkVehicle(
-            @RequestParam boolean needsEV,
-            @RequestParam boolean needsCover) {
-
-        ParkingSlot slot = service.parkVehicle(needsEV, needsCover);
-
-        if (slot == null) {
-            return ResponseEntity.badRequest().body("No slot available");
+    public ResponseEntity<?> park(@RequestParam boolean needsEV, @RequestParam boolean needsCover) {
+        try {
+            return ResponseEntity.ok(service.parkVehicle(needsEV, needsCover));
+        } catch (SimpleParkingException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-
-        return ResponseEntity.ok(slot);
     }
 
-    // 4️⃣ Remove Vehicle
     @PostMapping("/remove/{slotNo}")
-    public ResponseEntity<?> removeVehicle(@PathVariable Integer slotNo) {
-
-        return ResponseEntity.ok(service.removeVehicle(slotNo));
+    public ResponseEntity<?> remove(@PathVariable int slotNo) {
+        try {
+            return ResponseEntity.ok(service.removeVehicle(slotNo));
+        } catch (SimpleParkingException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

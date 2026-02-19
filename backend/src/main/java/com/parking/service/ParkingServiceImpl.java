@@ -1,99 +1,95 @@
+// src/main/java/com/parking/service/ParkingServiceImpl.java
 package com.parking.service;
 
 import com.parking.entity.ParkingSlot;
-import com.parking.exception.SlotAlreadyExistsException;
-import com.parking.exception.SlotAlreadyFreeException;
-import com.parking.exception.SlotNotFoundException;
-import com.parking.repository.ParkingSlotRepository;
+import com.parking.exception.SimpleParkingException;
+import com.parking.repository.ParkingSlotRepo;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ParkingServiceImpl implements ParkingService {
 
-    private final ParkingSlotRepository repository;
+    private final ParkingSlotRepo repo;
 
-    public ParkingServiceImpl(ParkingSlotRepository repository) {
-        this.repository = repository;
+    public ParkingServiceImpl(ParkingSlotRepo repo) {
+        this.repo = repo;
     }
 
     @Override
     public ParkingSlot addSlot(ParkingSlot slot) {
-
-        if (slot == null) {
-            throw new IllegalArgumentException("Slot body is required");
+        if (slot.getSlotNo() == null) {
+            throw new SimpleParkingException("slotNo is required");
         }
 
-        if (slot.getSlotNo() == null || slot.getSlotNo() <= 0) {
-            throw new IllegalArgumentException("slotNo must be a positive number");
+        if (repo.existsById(slot.getSlotNo())) {
+            throw new SimpleParkingException("Slot already exists: " + slot.getSlotNo());
         }
 
-        // prevent duplicates
-        if (repository.existsById(slot.getSlotNo())) {
-            throw new SlotAlreadyExistsException("Slot already exists: " + slot.getSlotNo());
-        }
-
-        // always create as free
-        slot.setOccupied(false);
-        return repository.save(slot);
+        // occupied default false
+        return repo.save(slot);
     }
 
     @Override
     public List<ParkingSlot> getAllSlots() {
-        return repository.findAll();
+        List<ParkingSlot> list = repo.findAll();
+
+        // sort by slotNo (nearest = small slotNo)
+        Collections.sort(list, new Comparator<ParkingSlot>() {
+            @Override
+            public int compare(ParkingSlot a, ParkingSlot b) {
+                return a.getSlotNo().compareTo(b.getSlotNo());
+            }
+        });
+
+        return list;
     }
 
     @Override
     public ParkingSlot parkVehicle(boolean needsEV, boolean needsCover) {
+        List<ParkingSlot> list = repo.findAll();
 
-        List<ParkingSlot> slots = repository.findAll();
+        ParkingSlot best = null;
 
-        ParkingSlot bestSlot = null;
+        for (int i = 0; i < list.size(); i++) {
+            ParkingSlot s = list.get(i);
 
-        for (ParkingSlot slot : slots) {
+            if (s.isOccupied()) continue;
+            if (needsEV && !s.isEvcharging()) continue;
+            if (needsCover && !s.isCovered()) continue;
 
-            if (slot.isOccupied()) {
-                continue;
-            }
-
-            if (needsEV && !slot.isEvCharging()) {
-                continue;
-            }
-
-            if (needsCover && !slot.isCovered()) {
-                continue;
-            }
-
-            // pick nearest = smallest slotNo
-            if (bestSlot == null || slot.getSlotNo() < bestSlot.getSlotNo()) {
-                bestSlot = slot;
+            if (best == null || s.getSlotNo() < best.getSlotNo()) {
+                best = s;
             }
         }
 
-        if (bestSlot == null) {
-            return null; // controller will return "No slot available"
+        if (best == null) {
+            throw new SimpleParkingException("No slot available");
         }
 
-        bestSlot.setOccupied(true);
-        return repository.save(bestSlot);
+        best.setOccupied(true);
+        return repo.save(best);
     }
 
     @Override
-    public ParkingSlot removeVehicle(Integer slotNo) {
+    public ParkingSlot removeVehicle(int slotNo) {
+        Optional<ParkingSlot> opt = repo.findById(slotNo);
 
-        if (slotNo == null || slotNo <= 0) {
-            throw new IllegalArgumentException("slotNo must be a positive number");
+        if (opt.isEmpty()) {
+            throw new SimpleParkingException("Slot not found: " + slotNo);
         }
 
-        ParkingSlot slot = repository.findById(slotNo)
-                .orElseThrow(() -> new SlotNotFoundException("Slot not found: " + slotNo));
+        ParkingSlot slot = opt.get();
 
         if (!slot.isOccupied()) {
-            throw new SlotAlreadyFreeException("Slot already free: " + slotNo);
+            throw new SimpleParkingException("Slot is already free: " + slotNo);
         }
 
         slot.setOccupied(false);
-        return repository.save(slot);
+        return repo.save(slot);
     }
 }
