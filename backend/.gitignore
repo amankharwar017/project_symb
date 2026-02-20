@@ -1,3 +1,6 @@
+# Eclipse workspace (do not commit)
+.metadata/
+
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
