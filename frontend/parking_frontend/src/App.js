@@ -7,7 +7,7 @@ export default function App() {
       <div className="topBar">
         <h2 className="title">Smart Parking Lot System</h2>
 
-        {/* Router DOM used (simple) */}
+        {/* Router DOM used  */}
         <div className="nav">
           <Link to="/">Assignment UI</Link>
         </div>
