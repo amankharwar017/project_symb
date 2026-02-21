@@ -3,24 +3,28 @@ import { useState } from "react";
 const API = "http://localhost:8080/api/slots";
 
 export default function AssignmentUI() {
-
   const [slots, setSlots] = useState([]);
   const [slotNo, setSlotNo] = useState("");
-
   const [covered, setCovered] = useState(false);
   const [evcharging, setEvcharging] = useState(false);
   const [needsEV, setNeedsEV] = useState(false);
   const [needsCover, setNeedsCover] = useState(false);
   const [removeSlotNo, setRemoveSlotNo] = useState("");
   const [output, setOutput] = useState("No output yet");
-  const [showTable, setShowTable] = useState(false); 
+  const [showTable, setShowTable] = useState(false);
 
   async function loadSlots() {
     try {
+      if (showTable) {
+       //if table is showing hide it
+        setShowTable(false);
+        return;
+      }
+      // if not showing then show 
       const res = await fetch(API);
       const data = await res.json();
       setSlots(data);
-      setShowTable(true); 
+      setShowTable(true);
     } catch (e) {
       setOutput("Error: Unable to fetch slots");
     }
@@ -149,9 +153,11 @@ export default function AssignmentUI() {
       {/* 2) Slot Listing */}
       <div className="box">
         <h3>2) Parking Slot List</h3>
-        <button className="btn refreshBtn" onClick={loadSlots}>Refresh List</button>
+        <button className="btn refreshBtn" onClick={loadSlots}>
+          {showTable ? "Hide Slot List" : "Show Parking Slot List"}
+        </button>
 
-        {showTable && (   
+        {showTable && (
           <div className="tableWrap" style={{ marginTop: 12 }}>
             <table>
               <thead>
