@@ -1,21 +1,17 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AssignmentUI from "./pages/AssignmentUI";
+import Home from "./pages/Home";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <div className="topBar">
-        <h2 className="title">Smart Parking Lot System</h2>
 
-        {/* Router DOM used  */}
-        <div className="nav">
-          <Link to="/">Assignment UI</Link>
-        </div>
-      </div>
-
+  <BrowserRouter>
       <Routes>
-        <Route path="/" element={<AssignmentUI />} />
+       
+        <Route path="/" element={<Home />} />
+       
+        <Route path="/assignment" element={<AssignmentUI />} />
       </Routes>
-    </BrowserRouter>
+  </BrowserRouter>
   );
 }
