@@ -1,12 +1,16 @@
-/* General Reset */
+/* =========================
+   GENERAL RESET
+========================= */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-   background-color: orangered;
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(to right, #ff9a9e, #fad0c4);
   color: #333;
 }
 
-/* Top Bar */
+/* =========================
+   TOP BAR
+========================= */
 .topBar {
   background-color: #007bff;
   color: white;
@@ -33,7 +37,9 @@ body {
   text-decoration: underline;
 }
 
-/* Home Page */
+/* =========================
+   HOME PAGE
+========================= */
 .homePage {
   text-align: center;
   margin-top: 100px;
@@ -42,7 +48,7 @@ body {
 .homePage h2 {
   font-size: 26px;
   margin-bottom: 20px;
-  color: black;   /* Welcome text black */
+  color: black;
 }
 
 .assignmentLink {
@@ -61,20 +67,31 @@ body {
   background-color: #0056b3;
 }
 
-/* Container */
+/* =========================
+   MAIN CONTAINER (FULL SCREEN)
+========================= */
 .container {
-  max-width: 900px;
-  margin: 30px auto;
-  padding: 20px;
+  min-height: 100vh;
+  width: 100%;
+  padding: 30px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Box Sections */
+/* =========================
+   BOX SECTIONS
+========================= */
 .box {
   background: white;
+  width: 100%;
+  max-width: 900px;
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .box h3 {
@@ -83,7 +100,9 @@ body {
   margin-bottom: 12px;
 }
 
-/* Row Layout */
+/* =========================
+   ROW LAYOUT
+========================= */
 .row {
   display: flex;
   gap: 12px;
@@ -91,7 +110,9 @@ body {
   flex-wrap: wrap;
 }
 
-/* Inputs */
+/* =========================
+   INPUTS
+========================= */
 .input {
   width: 220px;
   padding: 8px;
@@ -99,7 +120,9 @@ body {
   border-radius: 4px;
 }
 
-/* Buttons */
+/* =========================
+   BUTTONS
+========================= */
 .btn {
   color: white;
   border: none;
@@ -109,24 +132,26 @@ body {
   font-weight: bold;
 }
 
-/* Specific Button Colors */
-form .btn { 
-  background-color: green;   /* Add Slot button green */
+/* Button Colors */
+form .btn {
+  background-color: green;
 }
 
 .box:nth-of-type(2) .btn {
-  background-color: brown;   /* Refresh List button brown */
+  background-color: brown;
 }
 
 .box:nth-of-type(3) .row:first-of-type .btn {
-  background-color: green;   /* Park Vehicle button green */
+  background-color: green;
 }
 
 .box:nth-of-type(3) .row:last-of-type .btn {
-  background-color: red;     /* Remove Vehicle button red */
+  background-color: red;
 }
 
-/* Table */
+/* =========================
+   TABLE
+========================= */
 .tableWrap {
   overflow-x: auto;
 }
@@ -138,13 +163,13 @@ table {
 }
 
 th, td {
-  border: 1px solid #000;   /* Table border safe */
+  border: 1px solid #000;
   text-align: center;
   padding: 10px;
 }
 
 th {
-  background-color: orange;   /* Column headings orange */
+  background-color: orange;
   color: white;
 }
 
@@ -152,7 +177,9 @@ tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
-/* Output Panel */
+/* =========================
+   OUTPUT PANEL
+========================= */
 .outputBox {
   border: 2px solid #1e40af;
   background: #eef3ff;
