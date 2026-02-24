@@ -1,0 +1,8 @@
+{ 
+  "rewrites": [ 
+    { 
+      "source": "/api/(.*)", 
+      "destination": "http://Parking-backend-24-env.eba-ky3ymcix.ap-southeast-2.elasticbeanstalk.com/api/$1" 
+    } 
+  ] 
+} 

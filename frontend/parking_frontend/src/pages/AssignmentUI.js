@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const API = "https://Parking-backend-24-env.eba-ky3ymcix.ap-southeast-2.elasticbeanstalk.com/api/slots";
+const API = "/api/slots";
 
 export default function AssignmentUI() {
   const [slots, setSlots] = useState([]);
